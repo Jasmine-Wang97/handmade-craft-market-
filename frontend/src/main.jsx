@@ -7,3 +7,6 @@
 
 <Route path="/upload" element={<UploadProduct />} />
 <Route path="/upload-confirmation" element={<UploadConfirmation />} />
+<Route path="/manage-listings" element={<ManageListings />} />
+<Route path="/edit/:id" element={<EditListing />} />
+<Route path="/delete/:id" element={<DeleteConfirmation />} />
