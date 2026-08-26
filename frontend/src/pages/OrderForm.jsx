@@ -22,6 +22,11 @@ export default function OrderForm() {
       .then((res) => res.json())
       .then(() => navigate(`/order-confirmation`));
   }
+   //Required fields validation SCRUM‑41
+    if (!form.name || !form.email || !form.quantity) {
+        alert("Please fill all required fields.");
+        return;
+    }
 
   return (
     <form onSubmit={handleSubmit} className="p-10 space-y-4">
