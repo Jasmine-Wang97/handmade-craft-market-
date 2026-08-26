@@ -23,6 +23,12 @@ export default function UploadProduct() {
       .then(() => navigate("/upload-confirmation"));
   }
 
+    if (!form.name || !form.price || !form.description) {
+        alert("Please fill all required fields.");
+    return;
+    }
+
+
   return (
     <form onSubmit={handleSubmit} className="p-10 space-y-4">
       <input
