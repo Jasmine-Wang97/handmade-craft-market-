@@ -3,11 +3,15 @@ import cors from "cors";
 import products from "./products.js";
 import productDetails from "./productDetail.js";
 import orderRoutes from "./orderRoutes.js";
+import uploadRoutes from "./uploadRoutes.js";
+
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(orderRoutes);
+app.use(uploadRoutes);
 
 app.get("/products", (req, res) => {
   res.json(products);
