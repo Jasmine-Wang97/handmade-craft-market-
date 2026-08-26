@@ -4,6 +4,7 @@ import products from "./products.js";
 import productDetails from "./productDetail.js";
 import orderRoutes from "./orderRoutes.js";
 import uploadRoutes from "./uploadRoutes.js";
+import listingRoutes from "./listingRoutes.js";
 
 
 
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use(orderRoutes);
 app.use(uploadRoutes);
+app.use(listingRoutes);
 
 app.get("/products", (req, res) => {
   res.json(products);
