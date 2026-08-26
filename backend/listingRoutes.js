@@ -20,5 +20,18 @@ router.put("/seller/listings/:id", (req, res) => {
   products[index] = { ...products[index], ...req.body };
   res.json(products[index]);
 });
+//delete API
+router.delete("/seller/listings/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const index = products.findIndex((p) => p.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: "Product not found" });
+  }
+
+  products.splice(index, 1);
+  res.json({ message: "Product deleted" });
+});
+
 
 export default router;
