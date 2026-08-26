@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import products from "./products.js";
-import productDetails from "./productDetails.js";
+import productDetails from "./productDetail.js";
 
 const app = express();
 app.use(cors());
