@@ -1,43 +1,55 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // SCRUM-44: Required fields validation
-    if (!username) {
-      alert("Username is required");
+    if (!username.trim()) {
+      setError("Username is required");
       return;
     }
 
-    // SCRUM-45: Redirect to homepage
+    setError("");
     navigate("/home");
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20">
-      <form onSubmit={handleLogin} className="bg-white p-6 shadow-md rounded">
-        <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
+    <div className="login-screen">
+      <div className="login-left">
+        <div className="login-card">
+          <div className="login-brand">
+            <img src="/images/logo.png" alt="Handmade Craft Market logo" />
+          </div>
 
-        <input
-          type="text"
-          placeholder="Enter username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="w-full mb-4 p-2 border rounded"
-        />
+          <form onSubmit={handleLogin} className="login-form-box">
+            <h1 className="login-header">Welcome!</h1>
+            <p className="login-subtext">Login to explore more handmade products!</p>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white p-2 rounded"
-        >
-          Login
-        </button>
-      </form>
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className={`login-field ${error ? "error" : ""}`}
+            />
+
+            {error && <div style={{ color: "#d34d4d", marginTop: 12, fontWeight: 700 }}>{error}</div>}
+
+            <button type="submit" className="login-button" style={{ marginTop: 22 }}>
+              Sign in
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div className="login-right">
+        <img className="login-visual" src="/images/login image.webp" alt="Login product decoration" />
+      </div>
     </div>
   );
 }

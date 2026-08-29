@@ -1,43 +1,56 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import NavBar from "../components/NavBar";
+
+const mockListings = [
+  { id: 1, name: "Playing Card Ceramic Plates Set", price: 20, image: "/images/product1-poker.jpg", description: "This handmade ceramic plate set is inspired by classic playing cards, blending artistry with functionality..." },
+  { id: 2, name: "Whale Hanging", price: 20, image: "/images/product2-whale.jpg", description: "This handmade hanging mobile features a whimsical ceramic whale and shell details..." },
+  { id: 3, name: "Ceramic Sardine Tin Set", price: 20, image: "/images/product3-sardine.jpg", description: "This handcrafted ceramic set transforms a classic sardine tin into a beautiful decorative object..." }
+];
 
 export default function ManageListings() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(mockListings);
 
   useEffect(() => {
     fetch("http://localhost:3000/seller/listings")
       .then((res) => res.json())
-      .then((data) => setProducts(data));
+      .then((data) => {
+        if (Array.isArray(data) && data.length) setProducts(data);
+      })
+      .catch(() => setProducts(mockListings));
   }, []);
 
   return (
-    <div className="p-10">
-      <h1 className="text-3xl font-bold mb-6">Manage Listings</h1>
+    <div className="page-shell">
+      <NavBar />
 
-      <div className="space-y-4">
-        {products.map((p) => (
-          <div key={p.id} className="border p-4 rounded flex justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">{p.name}</h2>
-              <p className="text-gray-600">${p.price}</p>
-              <p className="text-gray-500">{p.description}</p>
+      <div className="section-frame manage-listings">
+        <h1 className="page-title" style={{ marginTop: 8 }}>My listing</h1>
+
+        <div className="manage-list">
+          {products.map((p) => (
+            <div key={p.id} className="list-item">
+              <div className="list-thumb">
+                <img src={p.image} alt={p.name} />
+              </div>
+
+              <div className="list-copy">
+                <h3>{p.name}</h3>
+                <div className="price">${p.price}</div>
+                <p>{p.description}</p>
+              </div>
+
+              <div className="list-actions">
+                <Link to={`/edit/${p.id}`}>
+                  <button className="action-btn green">Edit</button>
+                </Link>
+                <Link to={`/delete/${p.id}`}>
+                  <button className="action-btn red">Delete</button>
+                </Link>
+              </div>
             </div>
-
-            <div className="flex items-center space-x-4">
-              <Link to={`/edit/${p.id}`}>
-                <button className="bg-yellow-500 text-white px-4 py-2 rounded">
-                  Edit
-                </button>
-              </Link>
-
-              <Link to={`/delete/${p.id}`}>
-                <button className="bg-red-600 text-white px-4 py-2 rounded">
-                  Delete
-                </button>
-              </Link>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

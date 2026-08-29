@@ -1,56 +1,137 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import NavBar from "../components/NavBar";
+
+const fallbackProduct = {
+  id: 1,
+  name: "Poker plate",
+  price: 20,
+  image: "/images/product1-poker.jpg",
+  description: "Beautiful artwork."
+};
 
 export default function OrderForm() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [product, setProduct] = useState(fallbackProduct);
   const [form, setForm] = useState({
     name: "",
     email: "",
     quantity: 1,
   });
 
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    quantity: false,
+  });
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/products/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) setProduct(data);
+      })
+      .catch(() => setProduct(fallbackProduct));
+  }, [id]);
+
+  const price = Number(product.price) || 0;
+  const total = Number(form.quantity || 0) * price;
+
+  const handleChange = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const validateField = (field) => {
+    if (field === "quantity") return Number(form.quantity) > 0;
+    return String(form[field]).trim().length > 0;
+  };
+
   function handleSubmit(e) {
     e.preventDefault();
+
+    const valid = ["name", "email", "quantity"].every(validateField);
+    if (!valid) {
+      setTouched({ name: true, email: true, quantity: true });
+      return;
+    }
 
     fetch("http://localhost:3000/orders", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, productId: id })
+      body: JSON.stringify({
+        ...form,
+        productId: Number(id),
+        productName: product.name,
+        productPrice: price,
+        productImage: product.image,
+      })
     })
       .then((res) => res.json())
-      .then(() => navigate(`/order-confirmation`));
+      .then(() => navigate("/order-confirmation"));
   }
-   //Required fields validation SCRUM‑41
-    if (!form.name || !form.email || !form.quantity) {
-        alert("Please fill all required fields.");
-        return;
-    }
 
   return (
-    <form onSubmit={handleSubmit} className="p-10 space-y-4">
-      <input
-        className="border p-2 w-full"
-        placeholder="Your Name"
-        value={form.name}
-        onChange={(e) => setForm({ ...form, name: e.target.value })}
-      />
-      <input
-        className="border p-2 w-full"
-        placeholder="Email"
-        value={form.email}
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-      />
-      <input
-        className="border p-2 w-full"
-        type="number"
-        value={form.quantity}
-        onChange={(e) => setForm({ ...form, quantity: e.target.value })}
-      />
-      <button className="bg-blue-600 text-white px-4 py-2 rounded">
-        Submit Order
-      </button>
-    </form>
+    <div className="page-shell">
+      <NavBar />
+
+      <div className="section-frame">
+        <div className="order-layout">
+          <div className="order-side-image">
+            <img src={product.image} alt={product.name} />
+          </div>
+
+          <div className="order-form-box">
+            <h2>{product.name}</h2>
+            <div className="detail-price">${product.price}.00 AUD</div>
+
+            <form onSubmit={handleSubmit} noValidate>
+              <div className="form-wrap">
+                <div>
+                  <label className="form-label">Name*</label>
+                  <input
+                    className={`form-field ${touched.name ? (validateField("name") ? "valid" : "invalid") : ""}`}
+                    value={form.name}
+                    onChange={(e) => handleChange("name", e.target.value)}
+                    placeholder="E.g Jasmine"
+                  />
+                  {touched.name && !validateField("name") && <div className="form-error">Please inform your name</div>}
+                </div>
+
+                <div>
+                  <label className="form-label">Email*</label>
+                  <input
+                    className={`form-field ${touched.email ? (validateField("email") ? "valid" : "invalid") : ""}`}
+                    value={form.email}
+                    onChange={(e) => handleChange("email", e.target.value)}
+                    placeholder="E.g xxx@gmail.com"
+                  />
+                  {touched.email && !validateField("email") && <div className="form-error">Please inform your email</div>}
+                </div>
+
+                <div>
+                  <label className="form-label">Quantity*</label>
+                  <input
+                    type="number"
+                    min="1"
+                    className={`form-field ${touched.quantity ? (validateField("quantity") ? "valid" : "invalid") : ""}`}
+                    value={form.quantity}
+                    onChange={(e) => handleChange("quantity", Number(e.target.value) || 0)}
+                    placeholder="E.g 1"
+                  />
+                  {touched.quantity && !validateField("quantity") && <div className="form-error">Please inform your quantity</div>}
+                </div>
+              </div>
+
+              <div className="total-row">Total AUD$ {total.toFixed(2)}</div>
+
+              <button type="submit" className="submit-btn">Submit Order</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

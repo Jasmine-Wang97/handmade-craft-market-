@@ -1,24 +1,24 @@
 const products = [
   {
     id: 1,
-    name: "Handmade Wool Art",
-    price: 45,
-    image: "/images/sample1.jpg",
-    description: "Beautiful handmade wool artwork."
+    name: "Poker plate",
+    price: 20,
+    image: "/images/product1-poker.jpg",
+    description: "Beautiful artwork."
   },
   {
     id: 2,
-    name: "Vintage Fabric Patchwork",
-    price: 60,
-    image: "/images/sample2.jpg",
-    description: "Colorful patchwork made from vintage fabrics."
+    name: "Whale hanging",
+    price: 20,
+    image: "/images/product2-whale.jpg",
+    description: "Beautiful artwork."
   },
   {
     id: 3,
-    name: "Custom Embroidery Frame",
-    price: 35,
-    image: "/images/sample3.jpg",
-    description: "Personalized embroidery framed with love."
+    name: "Sardine tin set",
+    price: 20,
+    image: "/images/product3-sardine.jpg",
+    description: "Beautiful artwork."
   }
 ];
 
