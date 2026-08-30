@@ -1,12 +1,13 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import products from "./products.js";
 import productDetails from "./productDetail.js";
 import orderRoutes from "./orderRoutes.js";
 import uploadRoutes from "./uploadRoutes.js";
 import listingRoutes from "./listingRoutes.js";
 
-
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -24,8 +25,10 @@ app.get("/products/:id", (req, res) => {
   res.json(productDetails[id]);
 });
 
-app.listen(3000, () => {
-  console.log("Backend running on http://localhost:3000");
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+  console.log(`Backend running on http://localhost:${PORT}`);
 });
+
 
 
