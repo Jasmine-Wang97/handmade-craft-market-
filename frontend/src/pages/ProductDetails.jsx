@@ -11,12 +11,14 @@ const mockProduct = {
   longDescription: "This handmade ceramic plate set is inspired by classic playing cards, blending artistry with functionality. Each plate features a cream-colored base with red borders and patterns, creating a warm, vintage aesthetic. The set includes Ace of Hearts, Eight of Hearts, and King of Hearts designs — the King plate showcases a beautifully hand-painted illustration that highlights fine craftsmanship. Perfect for serving desserts, decorating your space, or gifting to someone who appreciates unique handmade pieces."
 };
 
+const API_URL = "http://13.54.198.166:5001";
+
 export default function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(mockProduct);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/products/${id}`)
+    fetch(`${API_URL}/products/${id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data) setProduct(data);

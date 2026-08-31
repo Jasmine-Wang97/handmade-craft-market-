@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
+const API_URL = "http://13.54.198.166:5001";
+
 const fallbackProduct = {
   id: 1,
   name: "Poker plate",
@@ -28,7 +30,7 @@ export default function OrderForm() {
   });
 
   useEffect(() => {
-    fetch(`http://localhost:3000/products/${id}`)
+    fetch(`${API_URL}/products/${id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data) setProduct(data);
@@ -58,7 +60,7 @@ export default function OrderForm() {
       return;
     }
 
-    fetch("http://localhost:3000/orders", {
+    fetch(`${API_URL}/orders`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

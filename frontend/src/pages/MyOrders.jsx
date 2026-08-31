@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
+const API_URL = "http://13.54.198.166:5001";
+
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/orders")
+    fetch(`${API_URL}/orders`)
       .then((res) => res.json())
       .then(async (data) => {
         const enriched = await Promise.all(
           data.map(async (order) => {
             try {
-              const response = await fetch(`http://localhost:3000/products/${order.productId}`);
+              const response = await fetch(`${API_URL}/products/${order.productId}`);
               const product = await response.json();
               return { ...order, product };
             } catch {

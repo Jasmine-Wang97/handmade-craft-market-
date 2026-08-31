@@ -8,11 +8,13 @@ const mockProducts = [
   { id: 3, name: "Ceramic Sardine Tin ...", price: 20, image: "/images/product3-sardine.jpg", description: "Handcrafted ceramic fish tin for home and gifting." }
 ];
 
+const API_URL = "http://13.54.198.166:5001";
+
 export default function ProductList() {
   const [products, setProducts] = useState(mockProducts);
 
   useEffect(() => {
-    fetch("http://localhost:3000/products")
+    fetch(`${API_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length) setProducts(data);
