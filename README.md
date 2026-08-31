@@ -1,32 +1,37 @@
 # Handmade Craft Market
 
 ## Project overview
-This project is a sample handmade marketplace application built to demonstrate a complete customer and seller workflow. The application allows users to browse products, view product details, complete an order, upload a new listing, and manage their listings.
+This project implements a handmade craft marketplace sample application designed to support a complete buyer and seller workflow. The application allows users to browse products, view product details, place orders, upload new listings, and manage existing listings.
 
-The application was developed as a lightweight full-stack prototype using React for the frontend and Express for the backend. The sample application workflow is aligned with the approved assignment design and prototype.
+The solution follows the approved design and prototype for a lightweight marketplace system and demonstrates a coherent end-to-end workflow for the assignment.
 
 ## Assignment requirement coverage
-The implementation includes the major workflow steps required for the assignment:
+The application includes the key assignment requirements:
 
-- Product browsing
+- Product browsing and catalog view
 - Product detail page
-- Order form and confirmation
+- Order placement and confirmation flow
 - Seller upload flow
-- Seller listing management
+- Listing management and edit/delete actions
 - Frontend and backend separation
-- Manual deployment procedure for EC2
+- Manual deployment to an EC2 instance
+- Basic security and environment hygiene
 
-## Architecture
+## Architecture summary
 ### Frontend
-- Built with React and Vite
+- React application built with Vite
 - Located in the `frontend/` directory
-- Handles routing, page UI, and user interaction
+- Responsible for routing, page rendering, and user interactions
 
 ### Backend
-- Built with Node.js and Express
+- Node.js and Express server
 - Located in the `backend/` directory
-- Exposes REST APIs for products, product details, orders, and listing operations
-- Uses environment variables for runtime configuration
+- Exposes REST endpoints for products, orders, uploads, and listing management
+
+### Data flow
+- The frontend fetches product and order data from the backend API
+- The backend stores in-memory sample data for the assignment workflow
+- The app demonstrates a simple client-server architecture appropriate for a demo deployment
 
 ## Tech stack
 - Frontend: React, Vite
@@ -34,21 +39,20 @@ The implementation includes the major workflow steps required for the assignment
 - Routing: React Router
 - Runtime config: dotenv
 
-## Local development
-### 1. Install dependencies
+## Local development setup
+### 1. Install project dependencies
 ```bash
-cd "c:\handmade-craft-market-"
+cd /home/ubuntu/handmade-craft-market-
 npm install
 
-cd "c:\handmade-craft-market-\frontend"
+cd /home/ubuntu/handmade-craft-market-/frontend
 npm install
 ```
 
 ### 2. Start the backend
 ```bash
-cd "c:\handmade-craft-market-"
-set PORT=5001
-node backend/server.js
+cd /home/ubuntu/handmade-craft-market-
+PORT=5001 node backend/server.js
 ```
 
 Expected output:
@@ -58,95 +62,109 @@ Backend running on http://localhost:5001
 
 ### 3. Start the frontend
 ```bash
-cd "c:\handmade-craft-market-\frontend"
+cd /home/ubuntu/handmade-craft-market-/frontend
 npm run dev -- --host 0.0.0.0
 ```
 
-Open the app at:
+Application access:
 - Frontend: http://localhost:5173/
-- Backend API: http://localhost:5001/
+- Backend API: http://localhost:5001/products
 
 ## Manual EC2 deployment procedure
-The sample application was prepared for manual deployment to an Amazon EC2 instance as part of the assignment workflow.
+The sample application was deployed manually to an Amazon EC2 instance for assignment demonstration purposes.
 
-### 1. Launch an EC2 instance
-- Use Amazon Linux or Ubuntu
-- Choose a public subnet
-- Attach a security group that allows inbound traffic for the required ports
+### 1. Launch EC2 instance
+- Create an Ubuntu or Amazon Linux EC2 instance
+- Ensure the instance runs in a public subnet
+- Attach a security group that allows the required inbound traffic
 
 ### 2. Connect to the instance
 ```bash
-ssh -i your-key.pem ec2-user@PUBLIC_IP
+ssh -i your-key.pem ubuntu@PUBLIC_IP
 ```
 
-### 3. Install Node.js
-For Amazon Linux:
+### 3. Install Node.js and npm
 ```bash
-sudo yum update -y
-sudo yum install -y nodejs npm
+sudo apt update
+sudo apt install -y nodejs npm
 ```
 
 ### 4. Upload the project files
-Copy the application source to the EC2 instance.
+Copy the project source code to the EC2 instance.
 
 ### 5. Install dependencies
 ```bash
-cd /home/ec2-user/handmade-craft-market-
+cd /home/ubuntu/handmade-craft-market-
 npm install
-cd /home/ec2-user/handmade-craft-market-/frontend
+
+cd /home/ubuntu/handmade-craft-market-/frontend
 npm install
 ```
 
 ### 6. Configure environment variables
-Create a `.env` file in the project root and set the application port:
+Create a local `.env` file and set the application port:
 ```env
 PORT=5001
 ```
 
-Do not commit secrets or real credentials to the repository. Keep environment values local to the instance.
+Do not commit secrets or credentials into the repository. Keep environment-specific configuration local to the instance.
 
-### 7. Run the backend on the instance
+### 7. Start the backend
 ```bash
-cd /home/ec2-user/handmade-craft-market-
-PORT=5001 node backend/server.js
+cd /home/ubuntu/handmade-craft-market-
+PORT=5001 nohup node backend/server.js > backend.log 2>&1 &
 ```
 
-### 8. Optional front-end public serving
-If the frontend must also be publicly accessible, serve it with a public host binding or use a reverse proxy. For example:
+### 8. Verify backend availability
 ```bash
-cd /home/ec2-user/handmade-craft-market-/frontend
-npm run dev -- --host 0.0.0.0
+curl http://localhost:5001/products
+```
+
+### 9. Public access verification
+To test the public endpoint, run the following from a machine outside the EC2 instance:
+```bash
+curl http://PUBLIC_IP:5001/products
 ```
 
 ## Security hygiene
-The sample application follows basic deployment hygiene:
+The deployment follows basic security practices expected for the assignment:
 
-- No secrets are committed to source control
-- Environment-dependent settings are kept in `.env`
-- The instance should use a security group with only the required inbound ports open
-- Public access should be restricted to the required application ports
+- No secrets or credentials are stored in the repository
+- Configuration values are kept in local environment files
+- Only required inbound ports are exposed
+- The application is launched on the required runtime port and restricted to necessary access
 
-Recommended EC2 security group rules:
-- 22 for SSH access
-- 80 or 443 if serving the frontend publicly
-- 5001 for the backend API
+Recommended EC2 inbound rules:
+- 22 for SSH access (restrict to your IP or office/school IP range)
+- 80 for HTTP access (restrict to your IP or office/school IP range, or 0.0.0.0/0 for public testing)
+- 443 for HTTPS access (restrict to your IP or office/school IP range, or 0.0.0.0/0 for public testing)
+- 5001 for the backend API (restrict to your IP or office/school IP range, or 0.0.0.0/0 for public testing)
 
-## Public access note
-When deployed to a valid EC2 instance, the application is expected to be accessed through the public IP of the instance, typically on port 5001 for the API server.
+**Important security note:** For testing and demo purposes, you can allow access from anywhere (0.0.0.0/0). However, for security best practices and when graders need access from specific locations, restrict inbound traffic to only the required IP ranges (e.g., your school/office IP, your personal IP, or your tutor's IP).
+
+## Deployment URL
+The application was deployed to an EC2 instance and configured to serve the API on the required port using the public IP of the instance.
 
 Example:
 ```text
 http://PUBLIC_IP:5001/products
 ```
 
+## Known limitations
+- Data is stored in memory and not persisted in a database
+- Login is a lightweight UI flow and not backed by a secure authentication system
+- No persistent file storage is implemented for uploaded assets
+- This is a sample marketplace prototype intended for demonstration purposes
+
 ## Verification checklist
 Before submission, confirm the following:
 
 - Frontend builds successfully
 - Backend starts successfully
-- API responds on port 5001
+- API responds on the required port
 - Security group allows required inbound traffic
 - No secrets are committed
+- Deployment procedure is documented clearly
 
 ## Project structure
 ```text
@@ -165,7 +183,6 @@ handmade-craft-market-
 │   ├── package.json
 │   └── src/
 ├── .gitignore
-├── .env.example
 ├── package.json
 ├── README.md
 ├── package-lock.json
@@ -173,4 +190,4 @@ handmade-craft-market-
 ```
 
 ## Result
-This assignment submission includes a working sample marketplace workflow and a documented manual EC2 deployment procedure suitable for a public demo environment.
+This project delivers a complete sample marketplace workflow, demonstrates frontend-backend separation, and documents a manual EC2 deployment procedure suitable for the assignment requirements.
