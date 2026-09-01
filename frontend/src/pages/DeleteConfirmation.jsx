@@ -14,8 +14,10 @@ export default function DeleteConfirmation() {
   const navigate = useNavigate();
   const [product, setProduct] = useState(defaultProduct);
 
+  const API_URL = "http://13.54.198.166:5001";
+
   useEffect(() => {
-    fetch("http://localhost:3000/seller/listings")
+    fetch(`${API_URL}/seller/listings`)
       .then((res) => res.json())
       .then((data) => {
         const result = data.find((p) => p.id === Number(id));
@@ -25,9 +27,21 @@ export default function DeleteConfirmation() {
   }, [id]);
 
   function confirmDelete() {
-    fetch(`http://localhost:3000/seller/listings/${id}`, {
+    fetch(`${API_URL}/seller/listings/${id}`, {
       method: "DELETE"
-    }).then(() => navigate("/manage-listings"));
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Delete failed");
+        }
+        return res.json();
+      })
+      .then(() => navigate("/manage-listings"))
+      .catch((error) => {
+        console.error("Delete failed:", error);
+        alert("Delete failed. Please try again.");
+      });
   }
 
   return (

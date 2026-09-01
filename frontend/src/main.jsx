@@ -12,6 +12,7 @@ import UploadConfirmation from "./pages/UploadConfirmation";
 import ManageListings from "./pages/ManageListings";
 import EditListing from "./pages/EditListing";
 import DeleteConfirmation from "./pages/DeleteConfirmation";
+import EditConfirmation from "./pages/EditConfirmation";
 import Login from "./pages/Login";
 import MyOrders from "./pages/MyOrders";
 
@@ -28,6 +29,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Route path="/upload-confirmation" element={<UploadConfirmation />} />
       <Route path="/manage-listings" element={<ManageListings />} />
       <Route path="/edit/:id" element={<EditListing />} />
+      <Route path="/edit-confirmation" element={<EditConfirmation />} />
       <Route path="/delete/:id" element={<DeleteConfirmation />} />
       <Route path="/my-orders" element={<MyOrders />} />
     </Routes>

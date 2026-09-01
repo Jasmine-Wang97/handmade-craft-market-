@@ -12,7 +12,7 @@ export default function ManageListings() {
   const [products, setProducts] = useState(mockListings);
 
   useEffect(() => {
-    fetch("http://localhost:3000/seller/listings")
+    fetch("http://13.54.198.166:5001/seller/listings")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length) setProducts(data);

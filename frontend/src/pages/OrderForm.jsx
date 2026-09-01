@@ -71,8 +71,18 @@ export default function OrderForm() {
         productImage: product.image,
       })
     })
-      .then((res) => res.json())
-      .then(() => navigate("/order-confirmation"));
+      .then(async (res) => {
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Failed to submit order");
+        }
+        return res.json();
+      })
+      .then(() => navigate("/order-confirmation"))
+      .catch((error) => {
+        console.error("Order submit failed:", error);
+        alert("Order submission failed. Please try again.");
+      });
   }
 
   return (

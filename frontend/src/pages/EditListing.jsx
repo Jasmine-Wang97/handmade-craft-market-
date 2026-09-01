@@ -15,8 +15,10 @@ export default function EditListing() {
   const navigate = useNavigate();
   const [form, setForm] = useState(defaultProduct);
 
+  const API_URL = "http://13.54.198.166:5001";
+
   useEffect(() => {
-    fetch("http://localhost:3000/seller/listings")
+    fetch(`${API_URL}/seller/listings`)
       .then((res) => res.json())
       .then((data) => {
         const product = data.find((p) => p.id === Number(id));
@@ -28,11 +30,23 @@ export default function EditListing() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    fetch(`http://localhost:3000/seller/listings/${id}`, {
+    fetch(`${API_URL}/seller/listings/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)
-    }).then(() => navigate("/manage-listings"));
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Update failed");
+        }
+        return res.json();
+      })
+      .then(() => navigate("/edit-confirmation"))
+      .catch((error) => {
+        console.error("Edit listing failed:", error);
+        alert("Update failed. Please try again.");
+      });
   }
 
   return (

@@ -35,13 +35,23 @@ export default function UploadProduct() {
       return;
     }
 
-    fetch("http://localhost:3000/upload", {
+    fetch("http://13.54.198.166:5001/upload", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)
     })
-      .then((res) => res.json())
-      .then(() => navigate("/upload-confirmation"));
+      .then(async (res) => {
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Upload failed");
+        }
+        return res.json();
+      })
+      .then(() => navigate("/upload-confirmation"))
+      .catch((error) => {
+        console.error("Upload failed:", error);
+        alert("Upload failed. Please try again.");
+      });
   }
 
   return (
